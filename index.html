@@ -97,6 +97,7 @@
             padding: 8px;
             border-radius: 6px;
             border: 1px solid rgba(255, 183, 77, 0.3);
+            text-transform: uppercase;
         }
         .slide-image {
             max-width: 100%;
@@ -202,7 +203,6 @@
 </head>
 <body>
 
-    <!-- TELA DE MENU -->
     <div id="screen-menu" class="container">
         <h2>Simulador - P2 Pratica - Interamericana</h2>
         <p style="margin-bottom: 20px; font-size: 1.1rem;">Bem-vindo! Escolhe o modo de estudo para esta sessão:</p>
@@ -212,7 +212,6 @@
         </div>
     </div>
 
-    <!-- TELA DO QUIZ -->
     <div id="screen-quiz" class="container" style="display: none;">
         <h2>Simulador - P2 Pratica - Interamericana</h2>
         
@@ -242,7 +241,6 @@
     </div>
 
     <script>
-        // Banco de dados com suporte a respostas aceitáveis extras (para erros comuns de digitação previstos)
         const baseQuestoes = [
             { src: 'seta/0001.jpg', arrow: 'seta de cima', answer: 'Celulas Cromofilas Basofilas' },
             { src: 'seta/0001.jpg', arrow: 'seta de baixo', answer: 'Celulas Cromofilas Acidofilas' },
@@ -250,9 +248,12 @@
             { src: 'seta/0002.jpg', arrow: 'seta de baixo', answer: 'Pituicitos' },
             { src: 'seta/0003.jpg', arrow: 'seta de cima', answer: 'Neuro Hipofise' },
             { src: 'seta/0003.jpg', arrow: 'seta de baixo', answer: 'Adeno Hipofise' },
+            
+            // Slide 4 ajustado para cima, meio e inferior
             { src: 'seta/0004.jpg', arrow: 'seta de cima', answer: 'Coloide' },
             { src: 'seta/0004.jpg', arrow: 'seta do meio', answer: 'Foliculares', accepted: ['Foliculares', 'Foliculadas'] },
-            { src: 'seta/0004.jpg', arrow: 'seta de baixo', answer: 'Foliculo Tiroidiano' },
+            { src: 'seta/0004.jpg', arrow: 'seta inferior', answer: 'Foliculo Tiroidiano' },
+            
             { src: 'seta/0005.jpg', arrow: 'seta de cima', answer: 'Paratireoide' },
             { src: 'seta/0005.jpg', arrow: 'seta de baixo', answer: 'Foliculo Tiroidiano' },
             { src: 'seta/0006.jpg', arrow: 'seta de cima', answer: 'Corteza' },
@@ -264,11 +265,18 @@
             { src: 'seta/0009.jpg', arrow: 'seta de cima', answer: 'Acino Seroso' },
             { src: 'seta/0009.jpg', arrow: 'seta de baixo', answer: 'Acino Mucoso' },
             { src: 'seta/0010.jpg', arrow: 'Identificação Geral', answer: 'Lingua' },
+            
+            // Slide 11 ajustado para cima, meio e inferior
             { src: 'seta/0011.jpg', arrow: 'seta de cima', answer: 'E.P.E' },
-            { src: 'seta/0011.jpg', arrow: 'seta de baixo', answer: 'Papila' },
+            { src: 'seta/0011.jpg', arrow: 'seta do meio', answer: 'Papila' },
+            { src: 'seta/0011.jpg', arrow: 'seta inferior', answer: 'Musculo' }, // Podes mudar para 'Musculo Estriado' se for a resposta exata do gabarito
+            
             { src: 'seta/0012.jpg', arrow: 'Identificação Geral', answer: 'Papila Fungiforme' },
-            { src: 'seta/0013.jpg', arrow: 'seta de cima', answer: 'E.P.E' },
-            { src: 'seta/0013.jpg', arrow: 'seta de baixo', answer: 'Papila Caliciforme', accepted: ['Papila Caliciforme', 'Papila Calciforme'] },
+            
+            // Slide 13 ajustado para esquerda e direita
+            { src: 'seta/0013.jpg', arrow: 'seta esquerda', answer: 'E.P.E' },
+            { src: 'seta/0013.jpg', arrow: 'seta direita', answer: 'Papila Caliciforme', accepted: ['Papila Caliciforme', 'Papila Calciforme'] },
+            
             { src: 'seta/0014.jpg', arrow: 'seta de cima', answer: 'Papilas Foliaceas' },
             { src: 'seta/0014.jpg', arrow: 'seta de baixo', answer: 'Musculo Estriado Visceral' },
             { src: 'seta/0015.jpg', arrow: 'seta de cima', answer: 'Corpusculo Gustativo' },
@@ -303,7 +311,7 @@
         let tempoRestante = 60;
         let timerGeral = null;
         let timerQuestao = null;
-        let modoAtual = 'multipla'; // 'escrito' ou 'multipla'
+        let modoAtual = 'multipla'; 
 
         const todasRespostas = [...new Set(baseQuestoes.map(q => q.answer))];
 
@@ -372,7 +380,7 @@
 
         function tempoEsgotado() {
             const questaoAtual = questoes[currentIndex];
-            document.getElementById('arrow-title').textContent = "⏰ Tempo Esgotado!";
+            document.getElementById('arrow-title').textContent = "⏰ TEMPO ESGOTADO!";
             
             if (modoAtual === 'multipla') {
                 const botoes = document.querySelectorAll('.option-btn');
@@ -408,7 +416,7 @@
             
             const questaoAtual = questoes[currentIndex];
             document.getElementById('slide-img').src = questaoAtual.src;
-            document.getElementById('arrow-title').textContent = questaoAtual.arrow.toUpperCase();
+            document.getElementById('arrow-title').textContent = questaoAtual.arrow;
             atualizarPlacar();
             
             document.getElementById('btn-next').style.display = 'none';
@@ -471,7 +479,6 @@
             const questaoAtual = questoes[currentIndex];
             const digitado = normalizarString(input.value);
             
-            // Verifica a resposta principal ou as aceitáveis
             let opcoesCorretas = [normalizarString(questaoAtual.answer)];
             if(questaoAtual.accepted) {
                 opcoesCorretas = opcoesCorretas.concat(questaoAtual.accepted.map(normalizarString));
@@ -512,7 +519,6 @@
                 voltarMenu();
             }
         }
-
     </script>
 </body>
 </html>
